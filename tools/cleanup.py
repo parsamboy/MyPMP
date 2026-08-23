@@ -24,6 +24,7 @@ C. Clear typographic slips (explicit, auditable list only)
 
 from __future__ import annotations
 
+import copy
 import os
 import re
 import shutil
@@ -71,7 +72,7 @@ TYPO_FIXES = [
 
 stats = {k: 0 for k in (
     "utm", "dup_url", "yeh", "kaf", "teh", "zwnj", "dbl_space",
-    "space_punct", "typos", "rsid", "meta")}
+    "space_punct", "typos", "rsid", "meta", "split")}
 
 
 def fix_text(s: str) -> str:
@@ -151,6 +152,94 @@ def apply_typos(body) -> None:
                 t.text = ""
 
 
+ARABIC_RANGES = ((0x0600, 0x06FF), (0x0750, 0x077F), (0x08A0, 0x08FF),
+                 (0xFB50, 0xFDFF), (0xFE70, 0xFEFF))
+LATIN_RE = re.compile(r"[A-Za-z\u00C0-\u024F]")
+TO_FA = str.maketrans("0123456789", "۰۱۲۳۴۵۶۷۸۹")
+TO_EN = str.maketrans("۰۱۲۳۴۵۶۷۸۹", "0123456789")
+
+
+def _script(text: str) -> str:
+    if any(any(lo <= ord(c) <= hi for lo, hi in ARABIC_RANGES) for c in text):
+        return "fa"
+    if LATIN_RE.search(text):
+        return "en"
+    return "neutral"
+
+
+def _chunk_by_script(s: str):
+    """Split a string into maximal runs of one script (digits/punct follow)."""
+    out, buf, cur = [], "", "neutral"
+    for ch in s:
+        sc = _script(ch)
+        if sc == "neutral":
+            buf += ch
+            continue
+        if cur == "neutral":
+            cur = sc
+            buf += ch
+        elif sc == cur:
+            buf += ch
+        else:
+            out.append((cur, buf))
+            buf, cur = ch, sc
+    if buf:
+        out.append((cur, buf))
+    return out
+
+
+def split_mixed_runs(root) -> None:
+    """
+    Re-split any run that ended up holding both Persian and Latin text
+    (a side effect of merging text when applying typo fixes), so each run
+    keeps the correct direction, language tag and digit shaping.
+    """
+    for r in list(root.iter(w("r"))):
+        tnodes = r.findall(w("t"))
+        if not tnodes:
+            continue
+        txt = "".join(t.text or "" for t in tnodes)
+        if not txt.strip():
+            continue
+        if _script(txt) != "fa" or not LATIN_RE.search(txt):
+            continue
+
+        parts = _chunk_by_script(txt)
+        if len(parts) < 2:
+            continue
+
+        parent = r.getparent()
+        pos = list(parent).index(r)
+        rPr = r.find(w("rPr"))
+        for offset, (sc, chunk) in enumerate(parts):
+            nr = etree.Element(w("r"))
+            if rPr is not None:
+                npr = copy.deepcopy(rPr)
+                lang = npr.find(w("lang"))
+                if lang is None:
+                    lang = etree.SubElement(npr, w("lang"))
+                rtl = npr.find(w("rtl"))
+                if rtl is None:
+                    rtl = etree.SubElement(npr, w("rtl"))
+                if sc == "en":
+                    rtl.set(w("val"), "0")
+                    lang.set(w("val"), "en-US")
+                    lang.attrib.pop(w("bidi"), None)
+                    chunk = chunk.translate(TO_EN)
+                else:
+                    rtl.attrib.pop(w("val"), None)
+                    lang.set(w("bidi"), "fa-IR")
+                    lang.attrib.pop(w("val"), None)
+                    chunk = chunk.translate(TO_FA)
+                nr.append(npr)
+            nt = etree.SubElement(nr, w("t"))
+            nt.set("{http://www.w3.org/XML/1998/namespace}space", "preserve")
+            nt.text = chunk
+            parent.insert(pos + offset, nr)
+        parent.remove(r)
+        stats["split"] += 1
+
+
 def scrub_part(data: bytes) -> bytes:
     """Normalise every <w:t> in a document part."""
     root = etree.fromstring(data)
@@ -163,6 +252,7 @@ def scrub_part(data: bytes) -> bytes:
     body = root[0] if len(root) else root
     strip_duplicate_urls(root)
     apply_typos(root)
+    split_mixed_runs(root)
     return etree.tostring(root, xml_declaration=True, encoding="UTF-8",
                           standalone=True)
 
