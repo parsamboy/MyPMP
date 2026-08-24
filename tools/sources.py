@@ -24,6 +24,26 @@ SOURCES = {
                  "رقم «۱» که از شماره‌گذاری فهرست چسبیده بود حذف شد.",
         inrefs=True,
     ),
+    11: dict(
+        short="Nikolich-Žugich et al., 2023",
+        full="Nikolich-Žugich, J., et al. (2023). The Twilight of "
+             "Immunity: Emerging Concepts in Aging of the Immune System. "
+             "Nature Immunology.",
+        status="fixed",
+        was="Nikolich",
+        evidence="نام خانوادگی ناقص بود؛ املای کامل Nikolich-Žugich است. "
+                 "در متن «نیکولاس» آمده که آوانویسی نادرست است.",
+        inrefs=True,
+    ),
+    12: dict(
+        short="Fülöp et al., 2023",
+        full=None,
+        status="fixed",
+        was="Fulop",
+        evidence="املای صحیح با دیاکریتیک مجارستانی: Fülöp. منبع در فهرست "
+                 "منابع پایان‌نامه موجود است.",
+        inrefs=True,
+    ),
     16: dict(
         short="Gould, 1978",
         full="Gould, R. L. (1978). Transformations: Growth and Change in "
