@@ -241,17 +241,20 @@ SOURCES = {
         inrefs=False,
     ),
     68: dict(
-        short="Zeng, 2011",
-        full=None,
-        status="unresolved",
+        short="Zeng, Gu & George, 2011",
+        full="Zeng, Y., Gu, D., & George, L. K. (2011). Association of "
+             "religious participation with mortality among Chinese old "
+             "adults. Research on Aging, 33(1), 51–83. "
+             "https://doi.org/10.1177/0164027510383584",
+        status="fixed",
         was="Zeng",
-        evidence="متن ادعا می‌کند «اعمال مذهبی باعث افزایش بهداشت روانی "
-                 "می‌شود». با نام Zeng و سال ۲۰۱۱ هیچ منبع معتبری که با "
-                 "این توصیف بخواند یافت نشد و در فهرست منابع پایان‌نامه هم "
-                 "نیست. پیشنهاد: یا اصل منبع ارائه شود یا این جمله حذف و "
-                 "به منبع معتبر دیگری (مثلاً Koenig, 2023) ارجاع داده شود.",
+        evidence="منبع تأیید شد (PMID 22448080 / PMCID PMC3310377). "
+                 "نویسندگان: Yi Zeng، Danan Gu، Linda K. George. "
+                 "مجله Research on Aging، جلد ۳۳، شماره ۱، صفحات ۵۱–۸۳، ژانویه ۲۰۱۱. "
+                 "داده‌ها از پیمایش CLHLS: ۹٬۰۱۷ سالمند ۸۵+ و ۶٬۹۵۶ سالمند ۶۵–۸۴ "
+                 "در سال‌های ۲۰۰۲ و ۲۰۰۵. خطر مرگ در شرکت‌کنندگان منظم مذهبی "
+                 "۲۴٪ کمتر بود (پس از تعدیل سلامت پایه: ۲۱٪).",
         inrefs=False,
-        uncertain=True,
     ),
     70: dict(
         short="Mat Saad, Hatta & Mohamad, 2010",
