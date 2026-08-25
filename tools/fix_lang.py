@@ -10,14 +10,18 @@
 در نسخهٔ قبل فقط settings.xml/themeFontLang اصلاح شده بود؛
 ۲۱ عنصر lang در styles.xml (از جمله Normal) جا مانده بودند.
 """
-import sys, zipfile
+import re, sys, zipfile
 from lxml import etree
 
 NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 W  = '{%s}' % NS
 def q(t): return W + t
 
-OLD, NEW = 'ar-SA', 'fa-IR'
+NEW = 'fa-IR'
+
+# هر گویش عربی، نه فقط ar-SA. در این سند ar-YE (عربی یمن) روی سبک
+# BasicParagraph مانده بود و با جست‌وجوی صرفِ 'ar-SA' دیده نمی‌شد.
+AR_ANY = re.compile(r'^ar(-[A-Za-z]{2,})?$', re.I)
 
 
 def fix_root(root):
@@ -25,7 +29,8 @@ def fix_root(root):
     n = 0
     for tag in ('lang', 'themeFontLang'):
         for e in root.iter(q(tag)):
-            if e.get(q('bidi')) == OLD:
+            v = e.get(q('bidi'))
+            if v and AR_ANY.match(v):
                 e.set(q('bidi'), NEW)
                 n += 1
     return n
@@ -40,7 +45,7 @@ def process(src, dst):
     for name in list(parts):
         if not name.endswith('.xml'):
             continue
-        if OLD.encode() not in parts[name]:
+        if not re.search(rb'"ar(-[A-Za-z]{2,})?"', parts[name]):
             continue
         root = etree.fromstring(parts[name])
         n = fix_root(root)
@@ -55,9 +60,11 @@ def process(src, dst):
 
     # بازبینی: هیچ ar-SA نباید بماند
     zz = zipfile.ZipFile(dst)
-    left = {n: zz.read(n).count(OLD.encode())
-            for n in zz.namelist()
-            if zz.read(n).count(OLD.encode())}
+    left = {}
+    for n in zz.namelist():
+        hits = re.findall(rb'"(ar(?:-[A-Za-z]{2,})?)"', zz.read(n))
+        if hits:
+            left[n] = sorted({h.decode() for h in hits})
     return report, left
 
 
