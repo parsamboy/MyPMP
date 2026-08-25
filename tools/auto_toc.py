@@ -236,13 +236,41 @@ def process(src, dst):
         j += 1
 
     # ---- جایگزینی فهرست دستی با فیلدها ----
-    old = blocks[i_toc:i_ch1]
-    anchor = blocks[i_ch1]
+    # چکیده بین «فهرست جداول» و فصل اول قرار دارد و محتوای واقعی است؛
+    # بازهٔ حذف باید پیش از آن متوقف شود، وگرنه چکیده هم پاک می‌شود.
+    i_stop = i_ch1
+    for k in range(i_toc, i_ch1):
+        if blocks[k].tag == q('p') and ptext(blocks[k]).strip().startswith('چکیده'):
+            i_stop = k
+            break
+
+    old = blocks[i_toc:i_stop]
+    anchor = blocks[i_stop]
+
+    # مرز بخش (sectPr ابجد → عددی) داخل یکی از پاراگراف‌های حذف‌شونده است؛
+    # پیش از حذف باید نجات داده شود وگرنه شماره‌گذاری مقدمات از بین می‌رود.
+    rescued = None
+    for b in old:
+        if b.tag != q('p'):
+            continue
+        ppr = b.find(q('pPr'))
+        if ppr is not None and ppr.find(q('sectPr')) is not None:
+            rescued = ppr.find(q('sectPr'))
+            break
+
     for b in old:
         body.remove(b)
 
     new = toc_field(r' TOC \o "1-4" \h \z \u ', 'فهرست مطالب')
     new += toc_field(r' TOC \h \z \c "جدول" ', 'فهرست جداول')
+
+    if rescued is not None:
+        # پاراگراف حامل مرز بخش، پس از فهرست‌ها و پیش از فصل اول
+        holder = etree.Element(q('p'))
+        hppr = etree.SubElement(holder, q('pPr'))
+        hppr.append(rescued)
+        new.append(holder)
+
     for p in new:                      # به ترتیب، نه معکوس
         anchor.addprevious(p)
 
