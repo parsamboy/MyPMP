@@ -201,15 +201,18 @@ SOURCES = {
     ),
     65: dict(
         short="Wang & Zhao, 2020",
-        full="Wang, Y., & Zhao, X. (2020). Spiritual Intelligence, "
-             "Psychological Well-Being and Purpose in Life among Older "
-             "Adults. Journal of Religion and Health, 59(3), 1234–1247.",
-        status="fixed",
+        full=None,
+        status="unresolved",
         was="Wang &Zhao",
-        evidence="نبود فاصله پیش از Zhao. هشدار: مشخصات کامل این مقاله در "
-                 "فهرست منابع پایان‌نامه نیست و در پایگاه‌های معتبر نیز "
-                 "با این عنوان یافت نشد؛ لازم است نویسنده اصل مقاله را "
-                 "ارائه کند یا ارجاع حذف شود.",
+        evidence="فقط ایراد نگارشی «نبود فاصله پیش از &» قطعی است. "
+                 "جست‌وجوی مکرر در PubMed، Springer، PLOS و Google Scholar "
+                 "هیچ مقاله‌ای با نویسندگان Wang و Zhao در سال ۲۰۲۰ دربارهٔ "
+                 "«هوش معنوی، بهزیستی روانی و هدف در زندگی سالمندان» با "
+                 "نمونهٔ ۴۰۰ نفری در شهر شنیانگ نیافت. "
+                 "هشدار مهم: مشخصات کتاب‌شناختی کامل برای این ارجاع در دست "
+                 "نیست و نباید حدس زده شود. نویسنده باید اصل مقاله (DOI یا "
+                 "PDF) را ارائه کند؛ در غیر این صورت این ارجاع و جملهٔ "
+                 "وابسته به آن از پیشینهٔ خارجی حذف شود.",
         inrefs=False,
         uncertain=True,
     ),
@@ -332,13 +335,20 @@ SOURCES = {
         full="Noyes, R., Stuart, S., Longley, S. L., Langbehn, D. R., & "
              "Happel, R. L. (2002). Hypochondriasis and Fear of Death. "
              "Journal of Nervous and Mental Disease, 190(8), 503–509.",
-        status="confirmed",
+        status="fixed",
         was="Noyes",
-        evidence="در فهرست منابع پایان‌نامه Noyes با سال ۲۰۰۵ آمده است، "
-                 "اما مقالهٔ «ترس از مرگ در خودبیمارانگاری» سال ۲۰۰۲ "
-                 "منتشر شده. سال ارجاع باید بازبینی شود.",
+        evidence="منبع تأیید شد (PMID 12193834، DOI 10.1097/00005053-"
+                 "200208000-00002). Journal of Nervous and Mental Disease، "
+                 "جلد ۱۹۰، شمارهٔ ۸، صص ۵۰۳–۵۰۹، اوت ۲۰۰۲. نمونه: ۱۶۲ بیمار "
+                 "سرپایی عمومی (۴۹ نفر با خودبیمارانگاری). سه عامل: ترس از "
+                 "مردن، از دست دادن معنا، و ترس از جدایی. "
+                 "خطا در پایان‌نامه: سال به اشتباه ۲۰۰۵ و مجله به اشتباه "
+                 "Depression and Anxiety, 21(3), 153–162 ثبت شده است. "
+                 "بررسی PubMed نشان داد در سال ۲۰۰۵ هیچ مقالهٔ Noyes دربارهٔ "
+                 "خودبیمارانگاری در Depression and Anxiety منتشر نشده است. "
+                 "افزون بر این، نمونهٔ پژوهش «بیماران سرپایی عمومی» بوده، نه "
+                 "«افراد مسن»؛ ادعای متن دربارهٔ سالمندان باید تعدیل شود.",
         inrefs=True,
-        uncertain=True,
     ),
     79: dict(
         short="Tomer & Eliason, 2000",
