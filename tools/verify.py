@@ -103,6 +103,39 @@ def check(src):
     match = all(ts.get(f'TOC{i}') == hs.get(f'Heading{i}') for i in (1, 2, 3, 4))
     row('TOC منطبق بر Heading', f'{sorted(ts.items())} / {sorted(hs.items())}', match)
 
+    # outlineLvl سرکش: ورد نویگیشن را از این هم می‌خواند، نه فقط سبک
+    def in_table(p):
+        e = p.getparent()
+        while e is not None:
+            if e.tag == q('tbl'):
+                return True
+            e = e.getparent()
+        return False
+    stray = 0
+    for p in body.iter(q('p')):
+        ppr = p.find(q('pPr'))
+        if ppr is None or ppr.find(q('outlineLvl')) is None:
+            continue
+        s2 = ppr.find(q('pStyle'))
+        sv2 = s2.get(q('val')) if s2 is not None else None
+        if in_table(p) or not (sv2 and re.fullmatch(r'Heading[1-4]', sv2)):
+            stray += 1
+    row('outlineLvl سرکش', stray, stray == 0)
+
+    nav = 0
+    for p in body.iter(q('p')):
+        ppr = p.find(q('pPr'))
+        if ppr is None:
+            continue
+        s2 = ppr.find(q('pStyle'))
+        sv2 = s2.get(q('val')) if s2 is not None else None
+        o = ppr.find(q('outlineLvl'))
+        lv = int(o.get(q('val'))) if o is not None else (
+            int(sv2[-1]) - 1 if sv2 and re.fullmatch(r'Heading[1-9]', sv2) else None)
+        if lv is not None and lv < 9 and in_table(p):
+            nav += 1
+    row('مدخل نویگیشن از جدول', nav, nav == 0)
+
     nf = len([x for x in fn.findall(q('footnote'))
               if x.get(q('id')) and int(x.get(q('id'))) > 0])
     nref = len(list(body.iter(q('footnoteReference'))))
