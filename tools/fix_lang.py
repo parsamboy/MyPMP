@@ -1,14 +1,24 @@
 # -*- coding: utf-8 -*-
 """
-پاک‌سازی کامل زبان دوسویه: ar-SA → fa-IR در همهٔ اجزای سند.
+یکدست‌سازی کامل زبان سند: فقط fa-IR و en-US باقی می‌ماند.
 
-چرا مهم است: ورد شکلِ ارقامِ فیلدها (PAGE، SEQ، TOC) و رفتار
-غلط‌یاب/شکست خط را بر پایهٔ w:lang/@bidi تعیین می‌کند. اگر حتی
-سبک پایهٔ Normal روی ar-SA بماند، هر پاراگرافی که override نداشته
-باشد زبانش را از آن ارث می‌برد.
+ورد سه خصیصهٔ زبان جدا دارد (w:lang):
+    @w:bidi     → زبان متن راست‌به‌چپ  (فارسی)
+    @w:val      → زبان متن لاتین       (انگلیسی)
+    @w:eastAsia → زبان خط شرق آسیا     (استفاده نمی‌شود)
 
-در نسخهٔ قبل فقط settings.xml/themeFontLang اصلاح شده بود؛
-۲۱ عنصر lang در styles.xml (از جمله Normal) جا مانده بودند.
+شکلِ ارقامِ فیلدهای PAGE/SEQ/TOC و رفتار غلط‌یاب از همین‌ها می‌آید،
+پس هر سه باید تمیز باشند:
+
+    هر گویش عربی (ar-*)      → fa-IR
+    هر گویش انگلیسی (en-GB،
+      en-CA، …) و fa در val  → en-US
+    ja-JP / ko-KR / zh-CN
+      و هر مقدار دیگر        → en-US
+
+نکتهٔ آموخته‌شده: هرگز دنبال رشتهٔ ثابت مثل 'ar-SA' نگرد — یک بار
+ar-YE (عربی یمن) روی سبک BasicParagraph از همین راه جا ماند.
+همیشه با الگو بگرد و در پایان بازبینی کن.
 """
 import re, sys, zipfile
 from lxml import etree
@@ -17,23 +27,54 @@ NS = 'http://schemas.openxmlformats.org/wordprocessingml/2006/main'
 W  = '{%s}' % NS
 def q(t): return W + t
 
-NEW = 'fa-IR'
-
-# هر گویش عربی، نه فقط ar-SA. در این سند ar-YE (عربی یمن) روی سبک
-# BasicParagraph مانده بود و با جست‌وجوی صرفِ 'ar-SA' دیده نمی‌شد.
+FA, EN = 'fa-IR', 'en-US'
 AR_ANY = re.compile(r'^ar(-[A-Za-z]{2,})?$', re.I)
+FA_ANY = re.compile(r'^fa(-[A-Za-z]{2,})?$', re.I)
+
+LANG_RE = re.compile(rb'w:(?:lang|themeFontLang)')
 
 
 def fix_root(root):
-    """@w:bidi را در همهٔ w:lang و themeFontLang به fa-IR می‌برد."""
+    """هر سه خصیصهٔ زبان را به fa-IR / en-US می‌برد."""
     n = 0
     for tag in ('lang', 'themeFontLang'):
         for e in root.iter(q(tag)):
+            # --- زبان دوسویه: همیشه فارسی ---
             v = e.get(q('bidi'))
-            if v and AR_ANY.match(v):
-                e.set(q('bidi'), NEW)
-                n += 1
+            if v and v != FA:
+                e.set(q('bidi'), FA); n += 1
+
+            # --- زبان لاتین: همیشه en-US ---
+            v = e.get(q('val'))
+            if v and v != EN:
+                # اگر val به‌اشتباه فارسی/عربی است، جایش bidi است نه val
+                e.set(q('val'), EN); n += 1
+
+            # --- شرق آسیا: بلااستفاده، یکدست en-US ---
+            v = e.get(q('eastAsia'))
+            if v and v != EN:
+                e.set(q('eastAsia'), EN); n += 1
     return n
+
+
+def audit(path):
+    """گزارش همهٔ کدهای زبان موجود در بسته."""
+    z = zipfile.ZipFile(path)
+    found = {}
+    for n in z.namelist():
+        if not n.endswith('.xml'):
+            continue
+        try:
+            r = etree.fromstring(z.read(n))
+        except Exception:
+            continue
+        for tag in ('lang', 'themeFontLang'):
+            for e in r.iter(q(tag)):
+                for a in ('val', 'eastAsia', 'bidi'):
+                    v = e.get(q(a))
+                    if v:
+                        found[(a, v)] = found.get((a, v), 0) + 1
+    return found
 
 
 def process(src, dst):
@@ -45,7 +86,7 @@ def process(src, dst):
     for name in list(parts):
         if not name.endswith('.xml'):
             continue
-        if not re.search(rb'"ar(-[A-Za-z]{2,})?"', parts[name]):
+        if not LANG_RE.search(parts[name]):
             continue
         root = etree.fromstring(parts[name])
         n = fix_root(root)
@@ -57,22 +98,17 @@ def process(src, dst):
     with zipfile.ZipFile(dst, 'w', zipfile.ZIP_DEFLATED) as z:
         for k, v in parts.items():
             z.writestr(k, v)
-
-    # بازبینی: هیچ ar-SA نباید بماند
-    zz = zipfile.ZipFile(dst)
-    left = {}
-    for n in zz.namelist():
-        hits = re.findall(rb'"(ar(?:-[A-Za-z]{2,})?)"', zz.read(n))
-        if hits:
-            left[n] = sorted({h.decode() for h in hits})
-    return report, left
+    return report
 
 
 if __name__ == '__main__':
-    src = sys.argv[1] if len(sys.argv) > 1 else 'Payannameh-v10.docx'
-    dst = sys.argv[2] if len(sys.argv) > 2 else 'Payannameh-v11.docx'
-    rep, left = process(src, dst)
+    src = sys.argv[1] if len(sys.argv) > 1 else 'Payannameh-final.docx'
+    dst = sys.argv[2] if len(sys.argv) > 2 else src
+    rep = process(src, dst)
     print('نوشته شد:', dst)
     for k, v in rep.items():
-        print(f'  اصلاح‌شده {k}: {v}')
-    print('  باقی‌ماندهٔ ar-SA:', left if left else 'هیچ ✓')
+        print(f'  {k}: {v} اصلاح')
+    print('\nبازبینی پس از اصلاح:')
+    for (a, v), c in sorted(audit(dst).items()):
+        mark = '✓' if v in (FA, EN) else '✗'
+        print(f'  {mark} w:{a:9s} = {v:8s} ×{c}')
