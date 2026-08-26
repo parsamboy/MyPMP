@@ -145,6 +145,110 @@ def check(src):
     row('شناسنامهٔ انگلیسی', 'Payame Noor University' in txt,
         'Payame Noor University' in txt)
 
+    def fonts_of_rpr(rpr):
+        if rpr is None:
+            return {}
+        rf = rpr.find(q('rFonts'))
+        if rf is None:
+            return {}
+        return {k.split('}')[-1]: v for k, v in rf.attrib.items()}
+
+    def is_bold_rpr(rpr):
+        if rpr is None:
+            return False
+        def on(e):
+            if e is None:
+                return False
+            v = e.get(q('val'))
+            return v not in ('0', 'false', 'off') if v is not None else True
+        return on(rpr.find(q('b'))) or on(rpr.find(q('bCs')))
+
+    ALLOWED = {'B Lotus', 'B Titr', 'Times New Roman'}
+    bad_font = 0
+    for rpr in doc.iter(q('rPr')):
+        for loc, v in fonts_of_rpr(rpr).items():
+            if loc.endswith('Theme') or loc.endswith('theme') or loc == 'hint' or not v:
+                continue
+            if v not in ALLOWED:
+                bad_font += 1
+    row('فونت غیرمجاز روی متن', bad_font, bad_font == 0)
+
+    # TOC: فونت مؤثر مدخل‌ها باید B Lotus باشد (نه B Titr)
+    toc_titr = 0
+    toc_mismatch = 0
+    heads, tocs = [], []
+    for p in body.iter(q('p')):
+        sv = None
+        ppr = p.find(q('pPr'))
+        s = ppr.find(q('pStyle')) if ppr is not None else None
+        if s is not None:
+            sv = s.get(q('val'))
+        t = ptext(p).strip()
+        if sv and re.fullmatch(r'Heading[1-4]', sv):
+            heads.append(t)
+        elif sv and re.fullmatch(r'TOC[1-4]', sv):
+            tocs.append((p, t, sv))
+            for r in p.iter(q('r')):
+                rpr = r.find(q('rPr'))
+                cs = fonts_of_rpr(rpr).get('cs')
+                tx = ''.join(x.text or '' for x in r.findall(q('t')))
+                if tx.strip() and cs == 'B Titr':
+                    toc_titr += 1
+    row('B Titr در فهرست مطالب', toc_titr, toc_titr == 0)
+    for h, (p, t, sv) in zip(heads, tocs):
+        title = re.sub(r'\d+$', '', t).strip()
+        if h != title:
+            toc_mismatch += 1
+    row('عنوان TOC = سرتیتر', toc_mismatch, toc_mismatch == 0)
+
+    # بولد pPr بدنه بعد از فهرست
+    start = 0
+    blocks = list(body)
+    for i, b in enumerate(blocks):
+        if b.tag == q('p') and ptext(b).strip() == 'فهرست مطالب':
+            start = i
+            break
+    body_ppr_bold = 0
+    for b in blocks[start:]:
+        if b.tag != q('p'):
+            continue
+        sv = None
+        ppr = b.find(q('pPr'))
+        if ppr is None:
+            continue
+        s = ppr.find(q('pStyle'))
+        if s is not None:
+            sv = s.get(q('val'))
+        if sv and (re.fullmatch(r'Heading[1-4]', sv) or sv in ('Caption',)
+                   or (sv.startswith('TOC') if sv else False)
+                   or sv == 'TableofFigures'):
+            continue
+        if is_bold_rpr(ppr.find(q('rPr'))):
+            body_ppr_bold += 1
+    row('بولد pPr بدنه بعد از فهرست', body_ppr_bold, body_ppr_bold == 0)
+
+    body_run_bold = 0
+    for b in blocks[start:]:
+        if b.tag != q('p'):
+            continue
+        sv = None
+        ppr = b.find(q('pPr'))
+        if ppr is not None:
+            s = ppr.find(q('pStyle'))
+            if s is not None:
+                sv = s.get(q('val'))
+        if sv and (re.fullmatch(r'Heading[1-4]', sv) or sv in ('Caption',)
+                   or (sv.startswith('TOC') if sv else False)
+                   or sv == 'TableofFigures'):
+            continue
+        for r in b.iter(q('r')):
+            t = ''.join(x.text or '' for x in r.findall(q('t')))
+            if not t.strip():
+                continue
+            if is_bold_rpr(r.find(q('rPr'))):
+                body_run_bold += 1
+    row('بولد ران بدنه بعد از فهرست', body_run_bold, body_run_bold == 0)
+
     return rows
 
 
