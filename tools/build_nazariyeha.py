@@ -4,8 +4,9 @@ import copy, shutil, zipfile
 from lxml import etree
 
 SRC = 'Payannameh-Fatemeh-Bayat-v1.9.docx'
-DST = 'Payannameh-Fatemeh-Bayat-Nazariyeha-v1.0.docx'
+DST = 'Payannameh-Fatemeh-Bayat-Nazariyeha-v1.1.docx'
 IMG = 'tools/tree_theories_draft.png'
+GREEN = '1B7A3D'  # مطالب جدید برای بازبینی
 
 NSMAP = {
     'w': 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
@@ -33,12 +34,14 @@ def el(tag, attrib=None, text=None):
     return e
 
 
-def rpr_body(rtl=True):
+def rpr_body(rtl=True, green=False):
     rpr = el('rPr')
     rf = el('rFonts', {
         'ascii': 'Times New Roman', 'hAnsi': 'Times New Roman',
         'eastAsia': 'Times New Roman', 'cs': 'B Lotus'})
     rpr.append(rf)
+    if green:
+        rpr.append(el('color', {'val': GREEN}))
     rpr.append(el('sz', {'val': '28'}))
     rpr.append(el('szCs', {'val': '28'}))
     if rtl:
@@ -53,12 +56,14 @@ def rpr_body(rtl=True):
     return rpr
 
 
-def rpr_fnmark():
+def rpr_fnmark(green=False):
     rpr = el('rPr')
     rpr.append(el('rFonts', {
         'ascii': 'Times New Roman', 'hAnsi': 'Times New Roman',
         'eastAsia': 'Times New Roman', 'cs': 'Times New Roman'}))
     rpr.append(el('rStyle', {'val': 'FootnoteReference'}))
+    if green:
+        rpr.append(el('color', {'val': GREEN}))
     rpr.append(el('sz', {'val': '20'}))
     rpr.append(el('szCs', {'val': '20'}))
     rpr.append(el('vertAlign', {'val': 'superscript'}))
@@ -83,9 +88,9 @@ def ppr(style=None, jc=None, bidi='1', extra=None):
     return p
 
 
-def run(text, rtl=True, bold=False):
+def run(text, rtl=True, bold=False, green=False):
     r = el('r')
-    rp = rpr_body(rtl=rtl)
+    rp = rpr_body(rtl=rtl, green=green)
     if bold:
         rp.insert(1, el('b'))
         rp.insert(2, el('bCs'))
@@ -97,14 +102,14 @@ def run(text, rtl=True, bold=False):
     return r
 
 
-def fn_run(fid):
+def fn_run(fid, green=False):
     r = el('r')
-    r.append(rpr_fnmark())
+    r.append(rpr_fnmark(green=green))
     r.append(el('footnoteReference', {'id': str(fid)}))
     return r
 
 
-def para(style, parts, jc=None, bidi='1', page_break=False):
+def para(style, parts, jc=None, bidi='1', page_break=False, green=False):
     """parts: str or ('fn', id) tuples."""
     p = el('p')
     extra = []
@@ -114,19 +119,20 @@ def para(style, parts, jc=None, bidi='1', page_break=False):
     p.append(ppr(style, jc=jc, bidi=bidi, extra=extra))
     if isinstance(parts, str):
         parts = [parts]
+    bold = bool(style and style.startswith('Heading'))
+    rtl = (bidi != '0')
     for item in parts:
         if isinstance(item, tuple) and item[0] == 'fn':
-            p.append(fn_run(item[1]))
+            p.append(fn_run(item[1], green=green))
         else:
-            rtl = (bidi != '0')
-            p.append(run(item, rtl=rtl, bold=style.startswith('Heading') if style else False))
+            p.append(run(item, rtl=rtl, bold=bold, green=green))
     return p
 
 
-def caption_para(text):
+def caption_para(text, green=False):
     p = el('p')
     p.append(ppr('Caption', jc='right', bidi='1', extra=[el('keepNext')]))
-    p.append(run(text, rtl=True, bold=True))
+    p.append(run(text, rtl=True, bold=True, green=green))
     return p
 
 
@@ -174,12 +180,12 @@ def image_para(rid, cx, cy):
     return p
 
 
-def hyperlink_run(text, rid):
+def hyperlink_run(text, rid, green=False):
     h = etree.Element(q('hyperlink'))
     h.set(R + 'id', rid)
     h.set(q('history'), '1')
     r = el('r')
-    rp = rpr_body(rtl=False)
+    rp = rpr_body(rtl=False, green=green)
     rp.insert(1, el('rStyle', {'val': 'Hyperlink'}))
     r.append(rp)
     t = el('t', text=text)
@@ -189,15 +195,15 @@ def hyperlink_run(text, rid):
     return h
 
 
-def bib_para(parts):
+def bib_para(parts, green=False):
     """parts mix of str and ('url', rid, text)."""
     p = el('p')
     p.append(ppr('Bibliography', jc='left', bidi='0'))
     for item in parts:
         if isinstance(item, tuple) and item[0] == 'url':
-            p.append(hyperlink_run(item[2], item[1]))
+            p.append(hyperlink_run(item[2], item[1], green=green))
         else:
-            p.append(run(item, rtl=False))
+            p.append(run(item, rtl=False, green=green))
     return p
 
 
@@ -332,7 +338,7 @@ def build():
 
     blocks.append(H('Heading1', 'نظریه‌های سالمندی', page_break=False))
     blocks.append(image_para('rIdTree', cx, cy))
-    blocks.append(caption_para('شکل ۱- درختواره نظریه‌های سالمندی (شاخه زیست‌شناختی، روان‌شناختی و جامعه‌شناختی)'))
+    blocks.append(caption_para('شکل ۱- درختواره نظریه‌های سالمندی (شاخه زیست‌شناختی، روان‌شناختی و جامعه‌شناختی)', green=True))
 
     blocks.append(H('Heading2', 'فهرست مطالب'))
     toc = [
@@ -356,7 +362,7 @@ def build():
         ('TOC1', 'منابع لاتین'),
     ]
     for st, t in toc:
-        blocks.append(H(st, t))
+        blocks.append(H(st, t, green=('۲-۱-۲-۲-۴' in t)))
 
     blocks.append(H('Heading3', '۲-۱-۲- نظریه‌های سالمندی', page_break=True))
     blocks.append(H('Normal', [
@@ -366,7 +372,8 @@ def build():
         pd('، 2023؛ سازمان جهانی بهداشت، 2020).'),
     ]))
     blocks.append(H('Normal',
-        'در ادامه، این نظریه‌ها در سه شاخه زیست‌شناختی، روان‌شناختی و جامعه‌شناختی مرور می‌شوند. شکل ۱ درختواره همین طبقه‌بندی را نشان می‌دهد و نظریه انتخاب اجتماعی-هیجانی را نیز در میان نظریه‌های روان‌شناختی جای داده است.'))
+        'در ادامه، این نظریه‌ها در سه شاخه زیست‌شناختی، روان‌شناختی و جامعه‌شناختی مرور می‌شوند. شکل ۱ درختواره همین طبقه‌بندی را نشان می‌دهد و نظریه انتخاب اجتماعی-هیجانی را نیز در میان نظریه‌های روان‌شناختی جای داده است.',
+        green=True))
 
     blocks.append(H('Heading4', '۲-۱-۲-۱- نظریه‌های زیست‌شناختی'))
     blocks.append(H('Normal', 'نظریه‌های زیست‌شناختی به سه دسته تقسیم می‌شوند:'))
@@ -381,7 +388,7 @@ def build():
         'در پژوهش‌های سال‌های اخیر، مفهوم «التهاب پیری» یا اینفلامجینگ', ('fn', 6),
         ' به محور تبیین ایمنی‌شناختی سالمندی بدل شده است. اینفلامجینگ به التهاب مزمن، خفیف و استریل گفته می‌شود که با افزایش سن و در نبود عفونت آشکار پدید می‌آید و با پیری ایمنی درهم‌تنیده است. این دیدگاه ایمنی‌متابولیک نشان می‌دهد که بازآرایی دستگاه ایمنی در طول عمر، همزمان می‌تواند مقاومت در برابر برخی تهدیدها را حفظ کند و زمینه بیماری‌های وابسته به سن را فراهم آورد. از همین‌رو، نظریه‌های معاصر ایمنی و التهاب را نه دو فرایند جدا، بلکه دو روی یک سکه می‌دانند (فرانچسکی و همکاران',
         ('fn', 7), pd('، 2018؛ فولپ و همکاران، 2023).'),
-    ]))
+    ], green=True))
 
     blocks.append(H('Heading5', '۲-۱-۲-۱-۲- نظریه پیر شدن سلولی'))
     blocks.append(H('Normal', [
@@ -391,7 +398,7 @@ def build():
     blocks.append(H('Normal', [
         'بازنگری‌های زیست‌شناسی سالمندی، پیری سلولی را در چارچوب «نشانه‌های دوازده‌گانه سالمندی» جای داده‌اند؛ از جمله بی‌ثباتی ژنوم، کوتاه شدن تلومر، تغییرات اپی‌ژنتیکی، اختلال پروتئوستاز، نارسایی خودخواری سلولی، اختلال حس مواد مغذی، بدکاری میتوکندری، پیری سلولی، فرسودگی سلول‌های بنیادی، تغییر ارتباط بین‌سلولی، التهاب مزمن و دسبیوز. این چارچوب تأکید می‌کند که پیری سلولی با سایر نشانه‌ها در شبکه‌ای به‌هم‌پیوسته عمل می‌کند و مداخله بر یکی می‌تواند بر بقیه اثر بگذارد (لوپز-اوتین و همکاران',
         ('fn', 8), pd('، 2023).'),
-    ]))
+    ], green=True))
 
     blocks.append(H('Heading5', '۲-۱-۲-۱-۳- نظریه رادیکال آزاد'))
     blocks.append(H('Normal', [
@@ -401,13 +408,15 @@ def build():
     blocks.append(H('Normal', [
         'همسو با همین چارچوب یکپارچه، استرس اکسیداتیو و بدکاری میتوکندری امروزه بیشتر به‌عنوان یکی از نشانه‌های درهم‌تنیده سالمندی دیده می‌شوند تا علت واحد پیری. بر این اساس، رادیکال‌های آزاد هم در آسیب سلولی و هم در پیام‌رسانی فیزیولوژیک نقش دارند و کاهش یا افزایش نامتعادل آن‌ها می‌تواند مسیر سالمندی را تغییر دهد (لوپز-اوتین و همکاران، ',
         pd('2023؛ گلادیشف، 2024).'),
-    ]))
+    ], green=True))
 
     blocks.append(H('Heading4', '۲-۱-۲-۲- نظریه‌های روان‌شناختی'))
+    blocks.append(H('Normal',
+        'نظریه‌های روان‌شناختی سالمندی در تلاش‌اند تا فرایند پیری را از منظر تغییرات روانی، شناختی، هیجانی و اجتماعی تبیین کرده و الگوهای رفتاری و سازگاری افراد سالمند را در این دوره از زندگی توضیح دهند (حسینی و همکاران، ۱۴۰۲).'))
     blocks.append(H('Normal', [
-        'نظریه‌های روان‌شناختی سالمندی در تلاش‌اند تا فرایند پیری را از منظر تغییرات روانی، شناختی، هیجانی و اجتماعی تبیین کرده و الگوهای رفتاری و سازگاری افراد سالمند را در این دوره از زندگی توضیح دهند (حسینی و همکاران، ۱۴۰۲). در کنار نظریه‌های کلاسیک مراحل زندگی، نظریه انتخاب اجتماعی-هیجانی در دهه‌های اخیر پشتوانه تجربی گسترده‌ای یافته و انگیزش هیجانی سالمندان را بر پایه ادراک زمان تبیین کرده است (کارستنسن',
+        'در کنار نظریه‌های کلاسیک مراحل زندگی، نظریه انتخاب اجتماعی-هیجانی در دهه‌های اخیر پشتوانه تجربی گسترده‌ای یافته و انگیزش هیجانی سالمندان را بر پایه ادراک زمان تبیین کرده است (کارستنسن',
         ('fn', 18), pd('، 2021).'),
-    ]))
+    ], green=True))
 
     blocks.append(H('Heading5', '۲-۱-۲-۲-۱- نظریه گولد'))
     blocks.append(H('Normal', [
@@ -417,7 +426,7 @@ def build():
     blocks.append(H('Normal', [
         'اگرچه صورت‌بندی گولد بیشتر بالینی و روایی است تا آزمون‌پذیر به شیوه نظریه‌های متأخر، تأکید او بر بازنگری معنا و روابط در نیمه دوم زندگی با یافته‌های جدیدتر درباره اولویت اهداف معنادار در سالمندی همسو است (کارستنسن، ',
         pd('2021).'),
-    ]))
+    ], green=True))
 
     blocks.append(H('Heading5', '۲-۱-۲-۲-۲- نظریه لوینسون و شی'))
     blocks.append(H('Normal', [
@@ -431,7 +440,7 @@ def build():
     blocks.append(H('Normal', [
         'صورت‌بندی مرحله‌ای لوینسون و شی امروزه کمتر به‌عنوان توالی ثابت همگانی پذیرفته می‌شود؛ با این حال، ایده مواجهه با خود و بازتعریف اهداف در بزرگسالی با پژوهش‌های معاصر انگیزش وابسته به زمان هم‌خوانی دارد (کارستنسن، ',
         pd('2006).'),
-    ]))
+    ], green=True))
 
     blocks.append(H('Heading5', '۲-۱-۲-۲-۳- نظریه اریکسون'))
     blocks.append(H('Normal', [
@@ -442,9 +451,9 @@ def build():
     blocks.append(H('Normal', [
         'مطالعات جدیدتر نشان داده‌اند که انسجام من با حالت‌های سلامت روان مرتبط است، در حالی که ناامیدی بیشتر با ویژگی شخصیتی روان‌رنجورخویی پیوند دارد؛ بنابراین تعارض پایانی اریکسون همچنان برای فهم سازگاری و سلامت روان سالمندان راهگشا است (وسترهاف، بولمایر و مک‌آدامز',
         ('fn', 16), pd('، 2017).'),
-    ]))
+    ], green=True))
 
-    blocks.append(H('Heading5', '۲-۱-۲-۲-۴- نظریه انتخاب اجتماعی-هیجانی'))
+    blocks.append(H('Heading5', '۲-۱-۲-۲-۴- نظریه انتخاب اجتماعی-هیجانی', green=True))
     blocks.append(H('Normal', [
         'نظریه انتخاب اجتماعی-هیجانی', ('fn', 17),
         ' که توسط لورا کارستنسن', ('fn', 18),
@@ -456,20 +465,20 @@ def build():
         pd('، 1999؛ کارستنسن، 2006؛ رید، چان و مایکلز'),
         ('fn', 22),
         pd('، 2014؛ کارستنسن، 2021).'),
-    ]))
+    ], green=True))
 
     blocks.append(H('Heading4', '۲-۱-۲-۳- نظریه‌های جامعه‌شناختی'))
     blocks.append(H('Heading5', '۲-۱-۲-۳-۱- نظریه عدم تعهد'))
     blocks.append(H('Normal', [
         'نظریه عدم تعهد', ('fn', 23),
         ' که توسط کامینگ و هنری', ('fn', 24),
-        ' ارائه شد، بیان می‌کند که سالمندی با کاهش تدریجی تعاملات و نقش‌های اجتماعی همراه است. بر اساس این نظریه، با افزایش سن، فرد به‌تدریج از برخی مسئولیت‌ها و روابط اجتماعی فاصله می‌گیرد و جامعه نیز متقابلاً نقش‌های کمتری به او واگذار می‌کند. این فرایند به سالمند فرصت می‌دهد تا انرژی و زمان خود را بیشتر صرف علایق شخصی، بازاندیشی در زندگی و سازگاری با تغییرات ناشی از سالمندی کند. از دیدگاه این نظریه، کاهش مشارکت اجتماعی بخشی طبیعی از فرایند سالمندی و زمینه‌ساز انطباق فرد با مراحل پایانی زندگی است، هرچند این دیدگاه بعدها با انتقادهایی مواجه شد و پژوهشگران بر اهمیت تداوم مشارکت اجتماعی و حفظ نقش‌های فعال در دوران سالمندی تأکید کردند (کامینگ و هنری، ',
+        ' ارائه شد، بیان می‌کند که سالمندی با کاهش تدریجی تعاملات و نقش‌های اجتماعی همراه است. بر اساس این نظریه، با افزایش سن، فرد به‌تدریج از برخی مسئولیت‌ها و روابط اجتماعی فاصله می‌گیرد و جامعه نیز متقابلاً نقش‌های کمتری به او واگذار می‌کند. این فرایند به سالمند فرصت می‌دهد تا انرژی و زمان خود را بیشتر صرف علایق شخصی، باز در زندگی و سازگاری با تغییرات ناشی از سالمندی کند. از دیدگاه این نظریه، کاهش مشارکت اجتماعی بخشی طبیعی از فرایند سالمندی و زمینه‌ساز انطباق فرد با مراحل پایانی زندگی است، هرچند این دیدگاه بعدها با انتقادهایی مواجه شد و پژوهشگران بر اهمیت تداوم مشارکت اجتماعی و حفظ نقش‌های فعال در دوران سالمندی تأکید کردند (کامینگ و هنری، ',
         pd('1961؛ آچلی'), ('fn', 25), pd('، 2016).'),
     ]))
     blocks.append(H('Normal', [
         'همسو با همین انتقادها، سیاست‌های جهانی سالمندی سالم بر حفظ توانمندی کارکردی و مشارکت اجتماعی تأکید دارند و کناره‌گیری را مسیر مطلوب همگانی نمی‌دانند (سازمان جهانی بهداشت، ',
         pd('2020؛ سازمان جهانی بهداشت، 2023).'),
-    ]))
+    ], green=True))
 
     blocks.append(H('Heading5', '۲-۱-۲-۳-۲- نظریه فعالیت'))
     blocks.append(H('Normal', [
@@ -481,7 +490,7 @@ def build():
     blocks.append(H('Normal', [
         'توسعه‌های جدیدتر مفهوم سالمندی موفق نیز بر مشارکت مولد، همبستگی اجتماعی و ظرفیت جوامع برای بهره‌گیری از توان سالمندان تأکید کرده‌اند و فعالیت را از سطح فردی به سطح اجتماعی گسترش داده‌اند (رو و کان',
         ('fn', 29), pd('، 2015).'),
-    ]))
+    ], green=True))
 
     blocks.append(H('Heading5', '۲-۱-۲-۳-۳- نظریه مبادله یا تعامل'))
     blocks.append(H('Normal', [
@@ -499,7 +508,7 @@ def build():
     blocks.append(H('Normal', [
         'پژوهش‌های بعدی در سالمندشناسی اجتماعی همچنان بر نقش تداوم هویت، عادت‌ها و روابط در سازگاری با گذارهای سالمندی تأکید دارند و این نظریه را چارچوبی برای فهم تفاوت‌های فردی در میزان فعالیت یا کناره‌گیری می‌دانند (آچلی، ',
         pd('2016).'),
-    ]))
+    ], green=True))
 
     blocks.append(H('Heading1', 'منابع فارسی', page_break=True))
     blocks.append(H('Normal',
@@ -538,8 +547,18 @@ def build():
         [('World Health Organization. (2020). Healthy ageing and functional ability.')],
         [('World Health Organization. (2023). Healthy ageing: A priority for delivering universal health coverage. Geneva: World Health Organization.')],
     ]
+    NEW_BIB = (
+        'Carstensen, L. L. (2006)',
+        'Carstensen, L. L. (2021)',
+        'Carstensen, L. L., Isaacowitz',
+        'Franceschi, C.',
+        'Reed, A. E.',
+        'Rowe, J. W.',
+        'Westerhof, G. J.',
+    )
     for item in latin:
-        blocks.append(bib_para(item))
+        first = item[0] if isinstance(item[0], str) else ''
+        blocks.append(bib_para(item, green=first.startswith(NEW_BIB)))
 
     for b in blocks:
         body.append(b)
