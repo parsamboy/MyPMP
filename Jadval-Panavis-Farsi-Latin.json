@@ -1,0 +1,627 @@
+[
+  {
+    "type": "شخص",
+    "fa": "آبراموویتز",
+    "la": "Abramowitz"
+  },
+  {
+    "type": "شخص",
+    "fa": "آچلی",
+    "la": "Atchley"
+  },
+  {
+    "type": "شخص",
+    "fa": "آدلر",
+    "la": "Adler"
+  },
+  {
+    "type": "شخص",
+    "fa": "آسموندسون",
+    "la": "Asmundson"
+  },
+  {
+    "type": "شخص",
+    "fa": "آیزاکوویتز",
+    "la": "Isaacowitz"
+  },
+  {
+    "type": "سازمان",
+    "fa": "انجمن روان‌پزشکی آمریکا",
+    "la": "American Psychiatric Association (APA)"
+  },
+  {
+    "type": "سازمان",
+    "fa": "انجمن روان‌شناسی آمریکا",
+    "la": "American Psychological Association (APA)"
+  },
+  {
+    "type": "شخص",
+    "fa": "اتچیسون",
+    "la": "Atchison"
+  },
+  {
+    "type": "شخص",
+    "fa": "اریکسون",
+    "la": "Erikson"
+  },
+  {
+    "type": "شخص",
+    "fa": "استاوروا",
+    "la": "Stavrova"
+  },
+  {
+    "type": "شخص",
+    "fa": "استرنبرگ",
+    "la": "Sternberg"
+  },
+  {
+    "type": "شخص",
+    "fa": "استوارت",
+    "la": "Stuart"
+  },
+  {
+    "type": "شخص",
+    "fa": "انگل",
+    "la": "Engel"
+  },
+  {
+    "type": "شخص",
+    "fa": "ایوراچ",
+    "la": "Iverach"
+  },
+  {
+    "type": "شخص",
+    "fa": "ایشیک",
+    "la": "Işık"
+  },
+  {
+    "type": "مفهوم",
+    "fa": "اینفلامجینگ",
+    "la": "Inflammaging"
+  },
+  {
+    "type": "مفهوم",
+    "fa": "اثر مثبت‌نگری",
+    "la": "positivity effect"
+  },
+  {
+    "type": "شخص",
+    "fa": "برادوک",
+    "la": "Braddock"
+  },
+  {
+    "type": "شخص",
+    "fa": "بک",
+    "la": "Beck"
+  },
+  {
+    "type": "شخص",
+    "fa": "بالبی",
+    "la": "Bowlby"
+  },
+  {
+    "type": "شخص",
+    "fa": "بولمایر",
+    "la": "Bohlmeijer"
+  },
+  {
+    "type": "مقیاس",
+    "fa": "پرسشنامه اضطراب سلامتی",
+    "la": "Health Anxiety Inventory (HAI)"
+  },
+  {
+    "type": "مقیاس",
+    "fa": "پرسشنامه اضطراب مرگ",
+    "la": "Death Anxiety Scale (DAS)"
+  },
+  {
+    "type": "شخص",
+    "fa": "پاپالیا",
+    "la": "Papalia"
+  },
+  {
+    "type": "شخص",
+    "fa": "پاول",
+    "la": "Powell"
+  },
+  {
+    "type": "شخص",
+    "fa": "پورهیت",
+    "la": "Purohit"
+  },
+  {
+    "type": "شخص",
+    "fa": "پینتو",
+    "la": "Pinto"
+  },
+  {
+    "type": "شخص",
+    "fa": "پیشزچینسکی",
+    "la": "Pyszczynski"
+  },
+  {
+    "type": "شخص",
+    "fa": "تامر",
+    "la": "Tomer"
+  },
+  {
+    "type": "شخص",
+    "fa": "توبین",
+    "la": "Tobin"
+  },
+  {
+    "type": "شخص",
+    "fa": "تورسون",
+    "la": "Thorson"
+  },
+  {
+    "type": "شخص",
+    "fa": "تمپلر",
+    "la": "Templer"
+  },
+  {
+    "type": "شخص",
+    "fa": "تیلور",
+    "la": "Taylor"
+  },
+  {
+    "type": "شخص",
+    "fa": "جیمز",
+    "la": "William James"
+  },
+  {
+    "type": "شخص",
+    "fa": "جین",
+    "la": "Jain"
+  },
+  {
+    "type": "مفهوم",
+    "fa": "ژرونتولوژی",
+    "la": "Gerontology"
+  },
+  {
+    "type": "شخص",
+    "fa": "داود",
+    "la": "Dowd"
+  },
+  {
+    "type": "شخص",
+    "fa": "داینر",
+    "la": "Diener"
+  },
+  {
+    "type": "شخص",
+    "fa": "دسی",
+    "la": "Deci"
+  },
+  {
+    "type": "شخص",
+    "fa": "دی‌سیکو",
+    "la": "DeCicco"
+  },
+  {
+    "type": "شخص",
+    "fa": "رایان",
+    "la": "Ryan"
+  },
+  {
+    "type": "شخص",
+    "fa": "رید",
+    "la": "Reed"
+  },
+  {
+    "type": "شخص",
+    "fa": "ریف",
+    "la": "Ryff"
+  },
+  {
+    "type": "شخص",
+    "fa": "زنگ",
+    "la": "Zeng"
+  },
+  {
+    "type": "شخص",
+    "fa": "زوهار",
+    "la": "Zohar"
+  },
+  {
+    "type": "شخص",
+    "fa": "سالکوویس / سالکوسکیس",
+    "la": "Salkovskis"
+  },
+  {
+    "type": "شخص",
+    "fa": "سالووی",
+    "la": "Salovey"
+  },
+  {
+    "type": "سازمان",
+    "fa": "سازمان جهانی بهداشت",
+    "la": "World Health Organization (WHO)"
+  },
+  {
+    "type": "سازمان",
+    "fa": "سازمان ملل متحد",
+    "la": "United Nations (UN)"
+  },
+  {
+    "type": "شخص",
+    "fa": "سوتو",
+    "la": "Soto"
+  },
+  {
+    "type": "شخص",
+    "fa": "سعاد",
+    "la": "Mat Saad"
+  },
+  {
+    "type": "شخص",
+    "fa": "شی",
+    "la": "Schaie"
+  },
+  {
+    "type": "شخص",
+    "fa": "فرانچسکی",
+    "la": "Franceschi"
+  },
+  {
+    "type": "شخص",
+    "fa": "فرانکل",
+    "la": "Frankl"
+  },
+  {
+    "type": "شخص",
+    "fa": "فرگوس",
+    "la": "Fergus"
+  },
+  {
+    "type": "شخص",
+    "fa": "فرنس",
+    "la": "Franz"
+  },
+  {
+    "type": "شخص",
+    "fa": "فروید",
+    "la": "Freud"
+  },
+  {
+    "type": "شخص",
+    "fa": "فلوریان",
+    "la": "Florian"
+  },
+  {
+    "type": "شخص",
+    "fa": "فولپ",
+    "la": "Fülöp"
+  },
+  {
+    "type": "شخص",
+    "fa": "کارستنسن",
+    "la": "Carstensen"
+  },
+  {
+    "type": "شخص",
+    "fa": "کاپلان",
+    "la": "Kaplan"
+  },
+  {
+    "type": "شخص",
+    "fa": "کامپیزی",
+    "la": "Campisi"
+  },
+  {
+    "type": "شخص",
+    "fa": "کامینگ",
+    "la": "Cumming"
+  },
+  {
+    "type": "شخص",
+    "fa": "کان",
+    "la": "Kahn"
+  },
+  {
+    "type": "شخص",
+    "fa": "کرجسی",
+    "la": "Krejcie"
+  },
+  {
+    "type": "شخص",
+    "fa": "کینگ",
+    "la": "King"
+  },
+  {
+    "type": "شخص",
+    "fa": "کونیگ",
+    "la": "Koenig"
+  },
+  {
+    "type": "شخص",
+    "fa": "کیز",
+    "la": "Keyes"
+  },
+  {
+    "type": "شخص",
+    "fa": "کیکاس",
+    "la": "Kikas"
+  },
+  {
+    "type": "شخص",
+    "fa": "کیونیو",
+    "la": "Kivnick"
+  },
+  {
+    "type": "شخص",
+    "fa": "گلادیشف",
+    "la": "Gladyshev"
+  },
+  {
+    "type": "شخص",
+    "fa": "گرینبرگ",
+    "la": "Greenberg"
+  },
+  {
+    "type": "شخص",
+    "fa": "گولد",
+    "la": "Gould"
+  },
+  {
+    "type": "شخص",
+    "fa": "لوپز-اوتین",
+    "la": "López-Otín"
+  },
+  {
+    "type": "شخص",
+    "fa": "لوین",
+    "la": "Levin"
+  },
+  {
+    "type": "شخص",
+    "fa": "لوینسون",
+    "la": "Levinson"
+  },
+  {
+    "type": "شخص",
+    "fa": "لیو",
+    "la": "Liu"
+  },
+  {
+    "type": "شخص",
+    "fa": "مارشال",
+    "la": "Marshall"
+  },
+  {
+    "type": "شخص",
+    "fa": "مارتین",
+    "la": "Martin"
+  },
+  {
+    "type": "شخص",
+    "fa": "مارتورل",
+    "la": "Martorell"
+  },
+  {
+    "type": "شخص",
+    "fa": "مازلو",
+    "la": "Maslow"
+  },
+  {
+    "type": "شخص",
+    "fa": "مایر",
+    "la": "Mayer"
+  },
+  {
+    "type": "شخص",
+    "fa": "مایکلز",
+    "la": "Mikels"
+  },
+  {
+    "type": "شخص",
+    "fa": "مک‌آدامز",
+    "la": "McAdams"
+  },
+  {
+    "type": "شخص",
+    "fa": "منزیس",
+    "la": "Menzies"
+  },
+  {
+    "type": "شخص",
+    "fa": "مورگان",
+    "la": "Morgan"
+  },
+  {
+    "type": "شخص",
+    "fa": "موریرا-آلمیدا",
+    "la": "Moreira-Almeida"
+  },
+  {
+    "type": "شخص",
+    "fa": "میکولینسر",
+    "la": "Mikulincer"
+  },
+  {
+    "type": "سازمان",
+    "fa": "مؤسسه ملی سالمندی",
+    "la": "National Institute on Aging (NIA)"
+  },
+  {
+    "type": "نظریه",
+    "fa": "نظریه ایمنی",
+    "la": "Immunological Theory"
+  },
+  {
+    "type": "نظریه",
+    "fa": "نظریه انتخاب اجتماعی-هیجانی",
+    "la": "Socioemotional Selectivity Theory"
+  },
+  {
+    "type": "نظریه",
+    "fa": "نظریه تداوم",
+    "la": "Continuity Theory"
+  },
+  {
+    "type": "نظریه",
+    "fa": "نظریه فعالیت",
+    "la": "Activity Theory"
+  },
+  {
+    "type": "نظریه",
+    "fa": "نظریه مدیریت وحشت",
+    "la": "Terror Management Theory"
+  },
+  {
+    "type": "نظریه",
+    "fa": "نظریه مدیریت معنا",
+    "la": "Meaning Management Theory"
+  },
+  {
+    "type": "نظریه",
+    "fa": "نظریه عدم تعهد",
+    "la": "Disengagement Theory"
+  },
+  {
+    "type": "شخص",
+    "fa": "نیمیر",
+    "la": "Neimeyer"
+  },
+  {
+    "type": "شخص",
+    "fa": "نیوگارتن",
+    "la": "Neugarten"
+  },
+  {
+    "type": "شخص",
+    "fa": "نیکولاس",
+    "la": "Nikolich-Žugich"
+  },
+  {
+    "type": "شخص",
+    "fa": "نوردگرن",
+    "la": "Nordgren"
+  },
+  {
+    "type": "شخص",
+    "fa": "نویز",
+    "la": "Noyes"
+  },
+  {
+    "type": "شخص",
+    "fa": "ون بروگن",
+    "la": "van Bruggen"
+  },
+  {
+    "type": "شخص",
+    "fa": "وسترهاف",
+    "la": "Westerhof"
+  },
+  {
+    "type": "شخص",
+    "fa": "وارویک",
+    "la": "Warwick"
+  },
+  {
+    "type": "شخص",
+    "fa": "والنتاینر",
+    "la": "Valentiner"
+  },
+  {
+    "type": "شخص",
+    "fa": "وانگ",
+    "la": "Wang"
+  },
+  {
+    "type": "شخص",
+    "fa": "وانگ (Wong)",
+    "la": "Wong"
+  },
+  {
+    "type": "شخص",
+    "fa": "هالدورسون",
+    "la": "Halldórsson"
+  },
+  {
+    "type": "شخص",
+    "fa": "هاردینگ",
+    "la": "Harding"
+  },
+  {
+    "type": "شخص",
+    "fa": "هاویگهرست",
+    "la": "Havighurst"
+  },
+  {
+    "type": "شخص",
+    "fa": "هایگ",
+    "la": "Haigh"
+  },
+  {
+    "type": "شخص",
+    "fa": "هوانگ",
+    "la": "Huang"
+  },
+  {
+    "type": "شخص",
+    "fa": "هنری",
+    "la": "Henry"
+  },
+  {
+    "type": "شخص",
+    "fa": "یالوم",
+    "la": "Yalom"
+  },
+  {
+    "type": "شخص",
+    "fa": "یانکر",
+    "la": "Yonker"
+  },
+  {
+    "type": "شخص",
+    "fa": "یونگ",
+    "la": "Jung"
+  },
+  {
+    "type": "شخص",
+    "fa": "چالن",
+    "la": "Chlan"
+  },
+  {
+    "type": "شخص",
+    "fa": "چان",
+    "la": "Chan"
+  },
+  {
+    "type": "شخص",
+    "fa": "چارلز",
+    "la": "Charles"
+  },
+  {
+    "type": "شخص",
+    "fa": "چاریکچی‌اوزگول",
+    "la": "Çarıkçı-Özgül"
+  },
+  {
+    "type": "شخص",
+    "fa": "چن",
+    "la": "Chen"
+  },
+  {
+    "type": "شخص",
+    "fa": "ژائو",
+    "la": "Zhao"
+  },
+  {
+    "type": "شخص",
+    "fa": "الیاسون",
+    "la": "Eliason"
+  },
+  {
+    "type": "شخص",
+    "fa": "رو",
+    "la": "Rowe"
+  },
+  {
+    "type": "مقیاس",
+    "fa": "DSM-5",
+    "la": "Diagnostic and Statistical Manual of Mental Disorders"
+  }
+]
