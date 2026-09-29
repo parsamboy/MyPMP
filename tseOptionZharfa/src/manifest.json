@@ -1,0 +1,15 @@
+{
+  "format": "classic-script-fragments-v1",
+  "order": [
+    "00-license-bootstrap.js",
+    "01-meta-config.js",
+    "02-state-utils-calendar.js",
+    "03-storage-pool.js",
+    "04-live-tsetmc-adapters.js",
+    "05-pricing-model.js",
+    "06-layers-pipeline.js",
+    "07-ui-panel.js",
+    "08-debug-api-startup.js",
+    "09-internal-tests.js"
+  ]
+}

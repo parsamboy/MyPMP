@@ -1,0 +1,13 @@
+{
+  "name": "tseoptionzharfa",
+  "version": "0.0.1",
+  "private": true,
+  "description": "tseOptionAbyss -v0.0.1 — TSETMC option filter and local JSON web interface",
+  "scripts": {
+    "build": "node scripts/build.js",
+    "parity": "node scripts/build.js --check",
+    "test": "node tests/run.js",
+    "check": "node --check tseOptionZharfa.js && node --check web/app.js && node scripts/build.js --check && node tests/run.js",
+    "serve": "python3 preview_server.py"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "adapterVersion": 1,
+  "instrumentId": "BASE-TEST-001",
+  "date": "2026-09-29",
+  "closePrice": 12345,
+  "volume": 987654,
+  "tradeCount": 321
+}

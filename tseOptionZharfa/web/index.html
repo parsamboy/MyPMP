@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080d19">
+  <title>tseOptionZharfa · tseOptionAbyss -v0.0.1</title>
+  <link rel="stylesheet" href="/web/styles.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="tseOptionZharfa">
+        <span class="brand-mark">Z</span>
+        <span><strong>tseOptionZharfa</strong><small>tseOptionAbyss -v0.0.1</small></span>
+      </a>
+      <div class="top-meta"><span class="status-dot"></span><span>موتور محلی · بدون ارسال داده</span></div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow"><span>OPTION ANALYSIS</span><i></i><span>نسخهٔ مستقل + سازگار با TSETMC</span></p>
+          <h1>از دادهٔ واقعی،<br><em>یک قیف شفاف بساز.</em></h1>
+          <p class="hero-text">ورودی را از فایل یا JSON خودتان بدهید؛ هشت لایهٔ تحلیل را اجرا کنید و ببینید هر نماد کجا عبور می‌کند یا کنار گذاشته می‌شود.</p>
+          <div class="hero-pills"><span>۸ لایهٔ قابل‌ردیابی</span><span>تنظیمات با تأیید شما</span><span>بدون دادهٔ ساختگی خودکار</span></div>
+        </div>
+        <aside class="hero-card">
+          <div class="orb orb-a"></div><div class="orb orb-b"></div>
+          <div class="hero-card-label">PRODUCT</div>
+          <div class="hero-card-title">tseOption<br><b>Zharfa</b></div>
+          <div class="hero-card-sub">tseOptionAbyss -v0.0.1</div>
+          <div class="hero-card-rule"></div>
+          <div class="hero-card-foot"><span>مدل را تغییر نمی‌دهیم</span><span>01 / 08</span></div>
+        </aside>
+      </section>
+
+      <section class="notice" role="note">
+        <span class="notice-icon">!</span>
+        <p><strong>مهم — ابزار تحلیلی است، نه توصیهٔ معاملاتی.</strong> اگر تاریخچه یا مظنهٔ معتبر در ورودی/استخر نباشد، بعضی fallbackهای نسخهٔ پایه با هشدار مشخص می‌شوند. هیچ نتیجه‌ای تضمین سود نیست؛ تصمیم و معامله با کاربر است.</p>
+      </section>
+
+      <div class="workspace">
+        <section class="panel input-panel">
+          <div class="panel-heading">
+            <div><span class="step-tag">01</span><h2>ورودی داده</h2><p>فقط داده‌ای را تحلیل می‌کند که خودتان وارد می‌کنید.</p></div>
+            <label class="file-button" for="file-input"><span>↑</span> بارگذاری JSON</label>
+            <input id="file-input" type="file" accept="application/json,.json" hidden>
+          </div>
+          <div class="input-meta"><span class="live-chip"><i></i> هیچ اتصالی به بازار برقرار نیست</span><span id="input-count">۰ ردیف</span></div>
+          <label class="sr-only" for="data-input">آرایهٔ JSON نمادهای اختیار</label>
+          <textarea id="data-input" spellcheck="false" dir="ltr" placeholder='[
+  {
+    "l18": "کد نماد",
+    "l30": "نام/مشخصات اختیار",
+    "pl": null,
+    "pd1": null,
+    "po1": null,
+    "base": "نماد پایه",
+    "basePrice": null,
+    "tno": null,
+    "tvol": null,
+    "qd1": null,
+    "qo1": null,
+    "expiryJdn": null
+  }
+]'></textarea>
+          <div class="input-foot"><span>نمونهٔ واقعی بازار را از منبع مورداعتماد خودتان وارد کنید.</span><button id="clear-input" class="text-button" type="button">پاک‌کردن</button></div>
+          <div class="actions"><button id="run-analysis" class="primary-button" type="button"><span>▶</span> اجرای قیف روی دادهٔ من</button><span class="local-note">محاسبه در همین مرورگر انجام می‌شود</span></div>
+          <div id="input-message" class="inline-message" aria-live="polite"></div>
+        </section>
+
+        <section class="panel settings-panel">
+          <div class="panel-heading compact">
+            <div><span class="step-tag">02</span><h2>آستانه‌های قابل تنظیم</h2><p>پیش‌فرض‌ها حفظ می‌شوند؛ تغییر فقط پس از تأیید.</p></div>
+            <span class="lock-mark">⌁</span>
+          </div>
+          <div class="settings-grid">
+            <label>حداقل قیمت <small>ریال</small><input data-config="minPrice" type="number" min="0" step="1"></label>
+            <label>حداکثر اسپرد <small>٪</small><input data-config="maxSpread" type="number" min="0" max="100" step="0.1"></label>
+            <label>حداکثر صرف IV <small>٪</small><input data-config="maxIvPremium" type="number" min="0" max="100" step="1"></label>
+            <label>حداقل بازده موردانتظار <small>٪</small><input data-config="minExpRet" type="number" min="0" max="200" step="1"></label>
+            <label>حداقل امتیاز <small>از ۱۰۰</small><input data-config="scoreMin" type="number" min="0" max="100" step="1"></label>
+            <label>حداقل روز تا سررسید <small>روز تقویمی</small><input data-config="minDaysLeft" type="number" min="0" max="365" step="1"></label>
+            <label>مبنای زمان مدل <small>پیش‌فرض حفظ‌شده</small><select data-config="modelTimeBasis"><option value="legacy-hold">legacy-hold</option><option value="calendar-expiry">calendar-expiry</option><option value="tse-trading">tse-trading (نیازمند تقویم کامل)</option></select></label>
+            <label>مبنای جریمه DTE <small>پیش‌فرض تقویمی</small><select data-config="dtePenaltyBasis"><option value="calendar">calendar</option><option value="trading">trading</option></select></label>
+            <label>تعطیلات رسمی <small>JDN، شمسی یا ISO با کاما</small><input data-config="marketHolidays" type="text" placeholder="1405/01/01, 2026-03-21"></label>
+            <label>سال‌های تقویم کامل <small>فقط پس از تکمیل کل فهرست تعطیلات</small><input data-config="marketCalendarCompleteYears" type="text" placeholder="1405, 1406"></label>
+            <label>افق سناریو <small>روز تقویمی با کاما</small><input data-config="holdScenarioDays" type="text" placeholder="3,5,7,10"></label>
+            <label>شوک پایه <small>اعشاری، مثل -0.05, 0, 0.05</small><input data-config="underlyingScenarioShocks" type="text" placeholder="-0.05,-0.02,0,0.02,0.05"></label>
+            <label>سالانه‌سازی نوسان <small>گزینهٔ تقویمی نیازمند پوشش کامل</small><select data-config="volatilityAnnualizationMode"><option value="legacy252">legacy252</option><option value="tse-calendar">tse-calendar (آزمایشی)</option></select></label>
+          </div>
+          <button id="save-config" class="secondary-button" type="button">ثبت تغییرات با تأیید</button>
+          <p class="settings-hint">پیش‌فرض legacy-hold و legacy252 حفظ شده‌اند. مبنای جایگزین و تقویم آزمایشی فقط با انتخاب صریح شما فعال می‌شوند؛ هیچ فهرست تعطیلاتی خودکار بارگیری نمی‌شود.</p>
+          <div class="profile-readonly"><strong>Profile فعال · فقط نمایشی</strong><p id="profile-summary">نمایه روی فیلترها یا محاسبات اثر نمی‌گذارد.</p></div>
+        </section>
+      </div>
+
+      <section id="results-section" class="results-section" hidden>
+        <div class="section-heading"><div><span class="step-tag">03</span><h2>خروجی قیف</h2><p id="result-summary">—</p></div><div class="export-actions"><button id="export-json" class="secondary-button" type="button">خروجی JSON</button><button id="export-csv" class="secondary-button" type="button">خروجی CSV</button></div></div>
+        <div id="warning-summary" class="warning-summary" hidden></div>
+        <div id="metric-cards" class="metric-grid"></div>
+        <div id="trend-status" class="trend-status" aria-live="polite"></div>
+        <section class="panel table-panel scenario-panel"><div class="subhead"><div><span class="eyebrow-small">HOLDING SCENARIOS · ADVISORY ONLY</span><h3>سناریوهای نگهداری آزمایشی</h3></div></div><p class="settings-hint">سناریوها برآورد نظری با نوسان/نرخ ثابت‌اند؛ اسپرد، هزینه، لغزش، تعطیلات ناقص و عدم قطعیت قیمت پایه می‌توانند نتیجه را عوض کنند. این خروجی توصیه یا پیش‌بینی قطعی نیست.</p><div id="scenario-list" class="scenario-list"></div></section>
+        <div class="result-grid">
+          <section class="panel pipeline-panel"><div class="subhead"><div><span class="eyebrow-small">PIPELINE</span><h3>مسیر هشت‌مرحله‌ای</h3></div><span class="legend"><i></i> عبور <b></b> حذف</span></div><div id="pipeline-list" class="pipeline-list"></div></section>
+          <section class="panel reject-panel"><div class="subhead"><div><span class="eyebrow-small">FILTER REASONS</span><h3>دلایل پرتکرار حذف</h3></div></div><div id="reject-list" class="reject-list"></div></section>
+        </div>
+        <section class="panel table-panel"><div class="subhead"><div><span class="eyebrow-small">CANDIDATES</span><h3>نمادهای عبوری</h3></div><span id="result-count" class="count-badge">۰</span></div><div class="table-wrap"><table><thead><tr><th>نماد</th><th>پایه</th><th>نوع</th><th>بازده ER</th><th>امتیاز</th><th>IV</th><th>DTE</th><th>سناریو</th><th>هشدار داده</th></tr></thead><tbody id="results-body"></tbody></table></div><div id="empty-results" class="empty-state" hidden>در این اجرا نمادی از همهٔ لایه‌ها عبور نکرد؛ دلایل پرتکرار و وضعیت داده را بررسی کنید.</div></section>
+      </section>
+
+      <section class="contract-strip">
+        <span class="contract-icon">✓</span><div><strong>قراردادها و انتساب حفظ شده‌اند</strong><p>منشأ فنی 0.0.4.6، مجوز Smart-FFA-1.0، انتساب مؤلف اصلی و قرارداد ثبت TSETMC داخل سورس/مستندات حفظ شده‌اند.</p></div><a href="/docs/code-review.fa.md">یادداشت بررسی ←</a>
+      </section>
+    </main>
+    <footer><span>© نسخهٔ انشعابی tseOptionZharfa · v0.0.1</span><span>مؤلف اصلی: <a href="https://t.me/p75ad" target="_blank" rel="noopener noreferrer">p75ad</a> · گروه: <a href="https://t.me/SmartOptionTSE" target="_blank" rel="noopener noreferrer">SmartOptionTSE</a></span></footer>
+  </div>
+  <script>window.__ZharfaStandalone=true;</script>
+  <script src="/tseOptionZharfa.js"></script>
+  <script>
+    (function () {
+      function loadApp() {
+        var app = document.createElement('script');
+        app.src = '/web/app.js';
+        document.body.appendChild(app);
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loadApp, { once: true });
+      else loadApp();
+    })();
+  </script>
+</body>
+</html>
